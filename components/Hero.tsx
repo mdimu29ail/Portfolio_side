@@ -202,7 +202,7 @@ export const Hero: React.FC<{ theme: 'dark' | 'light' }> = ({ theme }) => {
           <div className="lg:hidden w-full h-64 sm:h-80 relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl mt-8">
             <div className="absolute inset-0 bg-gradient-to-br from-[#d9ff00]/10 to-black z-10" />
             <img
-              src="https://i.ibb.co.com/DfPcstkw/1711445414023.jpg"
+              src="https://i.ibb.co.com/PscWzg4f/Gemini-Generated-Image-y5en9my5en9my5en.png"
               className="w-full h-full object-cover opacity-60 grayscale"
               alt="Mobile Visual"
             />
