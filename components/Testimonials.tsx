@@ -1,125 +1,195 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { TESTIMONIALS } from '../constants';
-import { SectionHeading } from './Shared';
-import { Quote, MessageSquare } from 'lucide-react';
+import {
+  Quote,
+  Star,
+  CheckCircle2,
+  MessageSquare,
+  Sparkles,
+} from 'lucide-react';
 
-export const Testimonials: React.FC<{ theme: 'dark' | 'light' }> = ({ theme }) => {
-  const isDark = theme === 'dark';
+interface MarqueeRowProps {
+  items: typeof TESTIMONIALS;
+  direction: 'left' | 'right';
+  speed: number;
+  themeStyles: any;
+}
 
-  // Theme-specific styles config
-  const styles = {
-    bg: isDark ? 'bg-[#050505]' : 'bg-[#f0f0f0]',
-    cardBg: isDark ? 'bg-[#0a0a0a]' : 'bg-white',
-    text: isDark ? 'text-white' : 'text-neutral-900',
-    subText: isDark ? 'text-neutral-400' : 'text-neutral-600',
-    border: isDark ? 'border-white/10' : 'border-black/10',
-    iconBg: isDark ? 'bg-white/5' : 'bg-black/5',
-    accent: isDark ? 'text-[#d9ff00]' : 'text-black', // Neon on dark, Black on light
-    accentBorder: isDark ? 'group-hover:border-[#d9ff00]/50' : 'group-hover:border-black/30',
-    gridColor: isDark ? '#202020' : '#d4d4d4',
-    quoteIcon: isDark ? 'text-white/5' : 'text-black/5',
-    ratingDot: isDark ? 'bg-[#d9ff00] shadow-[#d9ff00]' : 'bg-black shadow-black/20',
-  };
-
-  // Triple the items for smooth infinite loop
-  const marqueeItems = [...TESTIMONIALS, ...TESTIMONIALS, ...TESTIMONIALS];
+const MarqueeRow: React.FC<MarqueeRowProps> = ({
+  items,
+  direction,
+  speed,
+  themeStyles,
+}) => {
+  const tripleItems = [...items, ...items, ...items];
 
   return (
-    <section className={`py-24 md:py-40 relative overflow-hidden w-full transition-colors duration-500 ${styles.bg}`}>
-      
-      {/* --- BACKGROUND --- */}
-      {/* Dynamic Grid Pattern */}
-      <div 
-        className="absolute inset-0 opacity-20 pointer-events-none transition-opacity duration-500"
-        style={{
-            backgroundImage: `linear-gradient(to right, ${styles.gridColor} 1px, transparent 1px), linear-gradient(to bottom, ${styles.gridColor} 1px, transparent 1px)`,
-            backgroundSize: '40px 40px'
-        }}
-      />
-      
-      {/* Side Vignettes to fade marquee in/out */}
-      <div className={`absolute left-0 top-0 bottom-0 w-20 md:w-40 z-10 bg-gradient-to-r ${isDark ? 'from-[#050505] to-transparent' : 'from-[#f0f0f0] to-transparent'}`} />
-      <div className={`absolute right-0 top-0 bottom-0 w-20 md:w-40 z-10 bg-gradient-to-l ${isDark ? 'from-[#050505] to-transparent' : 'from-[#f0f0f0] to-transparent'}`} />
-
-      <div className="container max-w-7xl mx-auto mb-16 relative z-10 px-6">
-        <SectionHeading title="System Feedback" subtitle="User Sync" centered />
-      </div>
-
-      <div className="relative flex overflow-hidden w-full z-0">
-        {/* The Marquee Container */}
-        <div className="flex animate-marquee gap-6 md:gap-8 py-4 px-4">
-          {marqueeItems.map((t, i) => (
-            <div 
-              key={`${t.id}-${i}`}
-              className={`
-                relative flex flex-col justify-between p-8 md:p-10 
-                min-h-[350px] w-[350px] md:w-[450px] shrink-0 
-                rounded-2xl border transition-all duration-300 group
-                ${styles.cardBg} ${styles.border} ${styles.accentBorder} hover:shadow-xl
-              `}
-            >
-              {/* Background Quote Icon */}
-              <div className={`absolute top-6 right-8 transition-colors ${styles.quoteIcon} group-hover:opacity-20`}>
-                <Quote size={60} fill="currentColor" />
+    <div className="flex overflow-hidden w-full py-4 select-none">
+      <motion.div
+        initial={{ x: direction === 'right' ? '-50%' : '0%' }}
+        animate={{ x: direction === 'right' ? '0%' : '-50%' }}
+        transition={{ duration: speed, repeat: Infinity, ease: 'linear' }}
+        className="flex gap-6 px-3"
+      >
+        {tripleItems.map((t, i) => (
+          <div
+            key={`${t.id}-${i}`}
+            className={`
+              relative flex flex-col justify-between p-8 md:p-10 
+              min-h-[320px] w-[350px] md:w-[450px] shrink-0 
+              rounded-[2.5rem] border transition-all duration-500 group
+              ${themeStyles.cardBg} ${themeStyles.border} hover:border-[#53a7f5]/40 hover:shadow-2xl hover:shadow-[#53a7f5]/5
+            `}
+          >
+            {/* Context Header */}
+            <div className="flex items-center gap-4 mb-6 relative z-10">
+              <div className="w-12 h-12 rounded-2xl overflow-hidden border border-[#53a7f5]/20 p-0.5 bg-white/5">
+                <img
+                  src={t.avatar}
+                  className="w-full h-full object-cover rounded-xl grayscale group-hover:grayscale-0 transition-all duration-500"
+                  alt={t.name}
+                />
               </div>
-
-              {/* Header: Avatar & Info */}
-              <div className="flex items-center gap-4 mb-8 relative z-10">
-                 <div className={`w-14 h-14 rounded-xl overflow-hidden border p-1 transition-colors ${styles.border} ${isDark ? 'bg-zinc-900' : 'bg-gray-100'}`}>
-                   <img 
-                     src={t.avatar} 
-                     className="w-full h-full object-cover rounded-lg grayscale group-hover:grayscale-0 transition-all duration-500" 
-                     alt={t.name} 
-                   />
-                 </div>
-                 <div>
-                    <h4 className={`text-lg font-bold uppercase tracking-tight ${styles.text}`}>{t.name}</h4>
-                    <div className="flex items-center gap-2">
-                        <span className={`w-1.5 h-1.5 rounded-full ${isDark ? 'bg-green-500' : 'bg-green-600'}`} />
-                        <span className={`text-[10px] font-mono font-bold uppercase tracking-widest ${styles.accent}`}>
-                            {t.role}
-                        </span>
-                    </div>
-                 </div>
-              </div>
-
-              {/* Content */}
-              <p className={`text-lg md:text-xl font-medium leading-relaxed italic relative z-10 mb-8 ${styles.subText} group-hover:${styles.text} transition-colors`}>
-                "{t.content}"
-              </p>
-
-              {/* Footer: Rating "Status Lights" */}
-              <div className={`mt-auto pt-6 border-t flex items-center justify-between ${styles.border}`}>
-                <div className="flex gap-1.5">
-                    {[1, 2, 3, 4, 5].map(star => (
-                    <div key={star} className={`w-1.5 h-1.5 rounded-full shadow-[0_0_8px_rgba(0,0,0,0.1)] ${styles.ratingDot}`} />
-                    ))}
-                </div>
-                <div className={`flex items-center gap-2 text-[10px] font-mono uppercase tracking-widest opacity-40 ${styles.text}`}>
-                    <MessageSquare size={12} />
-                    <span>Verified Log</span>
+              <div className="flex flex-col">
+                <h4
+                  className={`text-base font-black uppercase tracking-tight ${themeStyles.text}`}
+                >
+                  {t.name}
+                </h4>
+                <div className="flex items-center gap-1.5">
+                  <CheckCircle2 size={10} className="text-emerald-500" />
+                  <span className="text-[9px] font-bold uppercase tracking-widest text-[#53a7f5]">
+                    {t.role}
+                  </span>
                 </div>
               </div>
             </div>
-          ))}
+
+            {/* Testimonial Text */}
+            <p
+              className={`text-base md:text-lg leading-relaxed font-medium italic mb-8 whitespace-normal ${themeStyles.subText}`}
+            >
+              "{t.content}"
+            </p>
+
+            {/* Quality Logic Footer */}
+            <div
+              className={`mt-auto pt-6 border-t border-dashed ${themeStyles.border} flex items-center justify-between`}
+            >
+              <div className="flex gap-0.5">
+                {[1, 2, 3, 4, 5].map(star => (
+                  <Star
+                    key={star}
+                    size={12}
+                    fill="#53a7f5"
+                    className="text-[#53a7f5]"
+                  />
+                ))}
+              </div>
+              <div className="flex items-center gap-2 opacity-30">
+                <Sparkles size={10} className="text-[#53a7f5]" />
+                <span className="text-[8px] font-black uppercase tracking-[0.2em]">
+                  Verified Feedback
+                </span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </motion.div>
+    </div>
+  );
+};
+
+export const Testimonials: React.FC<{ theme: 'dark' | 'light' }> = ({
+  theme,
+}) => {
+  const isDark = theme === 'dark';
+
+  const styles = {
+    bg: isDark ? 'bg-[#050505]' : 'bg-[#f8fafc]',
+    cardBg: isDark ? 'bg-[#0a0a0a]/60 backdrop-blur-xl' : 'bg-white',
+    text: isDark ? 'text-slate-100' : 'text-slate-900',
+    subText: isDark ? 'text-slate-500' : 'text-slate-600',
+    border: isDark ? 'border-white/5' : 'border-slate-200',
+  };
+
+  // Divide testimonials for variety across rows if you have many, or use same list
+  return (
+    <section
+      id="testimonials"
+      aria-labelledby="testimonials-heading"
+      className={`py-24 md:py-40 relative overflow-hidden w-full transition-colors duration-700 ${styles.bg}`}
+    >
+      {/* Background Radial Glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#53a7f5]/5 blur-[140px] rounded-full pointer-events-none" />
+
+      {/* Header Block */}
+      <div className="container max-w-7xl mx-auto px-6 relative z-10 mb-20 text-center">
+        <div className="flex flex-col items-center gap-5">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="flex items-center gap-3 px-5 py-2 rounded-full border border-[#53a7f5]/20 bg-[#53a7f5]/5 backdrop-blur-md"
+          >
+            <MessageSquare size={14} className="text-[#53a7f5]" />
+            <span className="text-[#53a7f5] text-[10px] md:text-xs font-black uppercase tracking-[0.3em]">
+              Trusted Partnerships
+            </span>
+          </motion.div>
+          <h2
+            id="testimonials-heading"
+            className={`text-5xl md:text-7xl font-black uppercase tracking-tighter ${styles.text}`}
+          >
+            Client Insights<span className="text-[#53a7f5]">.</span>
+          </h2>
         </div>
       </div>
 
-      <style dangerouslySetInnerHTML={{ __html: `
-        @keyframes marquee {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-33.33%); }
-        }
-        .animate-marquee {
-          display: flex;
-          width: fit-content;
-          animation: marquee 50s linear infinite;
-        }
-        .animate-marquee:hover {
-          animation-play-state: paused;
-        }
-      `}} />
+      {/* --- TRIPLE ROW MARQUEE --- */}
+      <div className="relative flex flex-col gap-2 w-full group">
+        {/* Row 1: Left to Right */}
+        <MarqueeRow
+          items={TESTIMONIALS}
+          direction="right"
+          speed={50}
+          themeStyles={styles}
+        />
+
+        {/* Row 2: Right to Left */}
+        <MarqueeRow
+          items={TESTIMONIALS}
+          direction="left"
+          speed={40}
+          themeStyles={styles}
+        />
+
+        {/* Row 3: Left to Right */}
+        <MarqueeRow
+          items={TESTIMONIALS}
+          direction="right"
+          speed={60}
+          themeStyles={styles}
+        />
+
+        {/* Cinematic Side Vignettes */}
+        <div
+          className={`absolute left-0 top-0 bottom-0 w-24 md:w-64 z-10 pointer-events-none bg-gradient-to-r ${isDark ? 'from-[#050505] to-transparent' : 'from-[#f8fafc] to-transparent'}`}
+        />
+        <div
+          className={`absolute right-0 top-0 bottom-0 w-24 md:w-64 z-10 pointer-events-none bg-gradient-to-l ${isDark ? 'from-[#050505] to-transparent' : 'from-[#f8fafc] to-transparent'}`}
+        />
+      </div>
+
+      {/* Standard Pause on Hover */}
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+        .group:hover .flex { animation-play-state: paused !important; }
+      `,
+        }}
+      />
     </section>
   );
 };

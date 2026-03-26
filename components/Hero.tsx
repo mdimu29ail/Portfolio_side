@@ -7,219 +7,260 @@ import {
   Zap,
   Terminal,
   Activity,
+  Code2,
+  Layers,
+  Globe,
 } from 'lucide-react';
-// Assuming these are in the same directory, if not adjust path
 import { RevealText, Magnetic } from './Shared';
 
 export const Hero: React.FC<{ theme: 'dark' | 'light' }> = ({ theme }) => {
   const { scrollY } = useScroll();
-  const bgY = useTransform(scrollY, [0, 1000], [0, 200]);
+  const isDark = theme === 'dark';
+
+  // Parallax effects optimized for 60fps
+  const bgY = useTransform(scrollY, [0, 1000], [0, 250]);
+  const textY = useTransform(scrollY, [0, 500], [0, -40]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
-      transition: { staggerChildren: 0.15 },
+      transition: { staggerChildren: 0.1, delayChildren: 0.3 },
     },
   };
 
-  const cardVariants = {
-    hidden: { x: 50, opacity: 0 },
-    show: { x: 0, opacity: 1, transition: { type: 'spring', bounce: 0.4 } },
+  const widgetVariants = {
+    hidden: { y: 30, opacity: 0, scale: 0.9 },
+    show: {
+      y: 0,
+      opacity: 1,
+      scale: 1,
+      transition: { type: 'spring', stiffness: 100, damping: 15 },
+    },
+  };
+
+  const styles = {
+    bg: isDark ? 'bg-[#050505]' : 'bg-[#f8fafc]',
+    text: isDark ? 'text-white' : 'text-slate-900',
+    subText: isDark ? 'text-slate-400' : 'text-slate-600',
+    cardBg: isDark ? 'bg-black/40' : 'bg-white/40',
+    border: isDark ? 'border-white/10' : 'border-slate-200',
   };
 
   return (
-    <section className="relative min-h-screen w-full flex items-center overflow-hidden bg-black">
-      {/* --- BACKGROUND IMAGE SECTION --- */}
-      <div className="absolute inset-0 z-0 h-[120%] w-full">
+    <section
+      className={`relative min-h-screen w-full flex items-center overflow-hidden transition-colors duration-700 ${styles.bg}`}
+    >
+      {/* --- DYNAMIC BACKGROUND LAYER --- */}
+      <div className="absolute inset-0 z-0 h-[120%] w-full pointer-events-none">
         <motion.img
           style={{ y: bgY }}
           src="https://i.ibb.co.com/PscWzg4f/Gemini-Generated-Image-y5en9my5en9my5en.png"
-          className="w-full h-full object-cover opacity-60"
-          alt="Background"
+          className={`w-full h-full object-cover transition-opacity duration-1000 ${isDark ? 'opacity-30 grayscale-[0.4]' : 'opacity-10 grayscale-[0.2]'}`}
+          alt="Engineering Background"
+          loading="eager"
         />
-        {/* Dark Overlays */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-black/30" />
-        <div className="absolute inset-0 bg-[url('https://i.ibb.co.com/PscWzg4f/Gemini-Generated-Image-y5en9my5en9my5en.png')] opacity-20 mix-blend-overlay"></div>
+        {/* Cinematic Overlays that adapt to theme */}
+        <div
+          className={`absolute inset-0 bg-gradient-to-t ${isDark ? 'from-[#050505] via-[#050505]/60' : 'from-[#f8fafc] via-[#f8fafc]/60'} to-transparent`}
+        />
+        <div
+          className={`absolute inset-0 bg-gradient-to-r ${isDark ? 'from-[#050505]/80' : 'from-[#f8fafc]/80'} via-transparent to-transparent`}
+        />
+
+        {/* Brand Glow (Matches #53a7f5) */}
+        <div className="absolute top-[-10%] right-[-10%] w-[60%] h-[60%] bg-[#53a7f5]/10 blur-[120px] rounded-full" />
       </div>
 
-      <div className="container mx-auto px-4 sm:px-6 md:px-10 relative z-10 w-full h-full pt-20 pb-12 lg:pt-0 lg:pb-0">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center min-h-[calc(100vh-80px)]">
-          {/* --- LEFT COLUMN: CONTENT --- */}
-          <div className="flex flex-col items-start text-left justify-center h-full">
+      <div className="container mx-auto px-6 md:px-12 relative z-10 w-full pt-32 lg:pt-0">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-6 items-center">
+          {/* --- LEFT CONTENT: PROFESSIONAL NARRATIVE --- */}
+          <motion.div
+            style={{ y: textY }}
+            className="flex flex-col items-start text-left"
+          >
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
-              className="flex items-center gap-3 mb-6 md:mb-8"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className={`flex items-center gap-3 mb-8 px-4 py-2 border rounded-full backdrop-blur-md ${isDark ? 'border-[#53a7f5]/20 bg-[#53a7f5]/5' : 'border-[#53a7f5]/30 bg-white'}`}
             >
-              <span className="w-2 h-2 bg-[#d9ff00] rounded-full animate-pulse shadow-[0_0_12px_#d9ff00]" />
-              <span className="px-3 py-1 border border-[#d9ff00]/30 rounded-full bg-[#d9ff00]/10 text-[#d9ff00] font-mono text-[10px] md:text-xs tracking-widest uppercase backdrop-blur-md">
-                System Architecture v3.2
+              <span className="w-2 h-2 bg-[#53a7f5] rounded-full animate-pulse shadow-[0_0_10px_#53a7f5]" />
+              <span
+                className={`font-bold text-[10px] md:text-xs tracking-[0.3em] uppercase ${isDark ? 'text-[#53a7f5]' : 'text-[#3b82f6]'}`}
+              >
+                MERN Stack Specialist
               </span>
             </motion.div>
 
-            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter text-white leading-[0.95] md:leading-[0.9] mb-6 md:mb-8 font-sans">
-              <RevealText>Build</RevealText> <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-white/20">
-                <RevealText delay={0.1}>Beyond</RevealText>
+            <h1
+              className={`text-5xl sm:text-7xl md:text-8xl lg:text-[6.2rem] font-black tracking-tighter leading-[0.85] mb-8 font-['Plus_Jakarta_Sans'] ${styles.text}`}
+            >
+              <RevealText>Engineering</RevealText> <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#53a7f5] via-blue-400 to-cyan-300">
+                <RevealText delay={0.15}>Next-Gen</RevealText>
               </span>{' '}
               <br />
-              <RevealText delay={0.2} className="text-[#d9ff00]">
-                Limits.
-              </RevealText>
+              <RevealText delay={0.3}>Web Realities.</RevealText>
             </h1>
 
             <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4, duration: 0.8 }}
-              className="text-base sm:text-lg md:text-xl text-neutral-300 max-w-lg mb-8 md:mb-10 leading-relaxed font-light"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.8 }}
+              className={`text-lg md:text-xl max-w-xl mb-12 leading-relaxed font-medium ${styles.subText}`}
             >
-              Architecting ultra-low latency ecosystems. We bridge the gap
-              between complex backend infrastructure and fluid frontend
-              experiences.
+              Hi, I'm{' '}
+              <span
+                className={`${isDark ? 'text-white' : 'text-black'} font-bold`}
+              >
+                Imamul Molla
+              </span>
+              . I architect high-performance digital products, merging scalable
+              backend logic with fluid, user-centric frontend experiences.
             </motion.p>
 
-            <div className="flex flex-col sm:flex-row w-full sm:w-auto items-stretch sm:items-center gap-4">
+            <div className="flex flex-col sm:flex-row w-full sm:w-auto items-stretch sm:items-center gap-5">
               <Magnetic strength={0.2}>
-                <button className="group relative w-full sm:w-auto px-8 py-4 bg-[#d9ff00] text-black text-xs sm:text-sm font-black uppercase tracking-widest overflow-hidden hover:scale-105 transition-transform duration-300">
-                  <span className="relative z-10 flex items-center justify-center gap-2">
-                    Initialize{' '}
+                <button
+                  aria-label="View My Portfolio"
+                  className="group relative px-10 py-5 bg-[#53a7f5] text-white text-sm font-black uppercase tracking-widest rounded-2xl overflow-hidden hover:shadow-[0_20px_40px_rgba(83,167,245,0.3)] transition-all duration-500"
+                >
+                  <span className="relative z-10 flex items-center justify-center gap-3">
+                    Launch Work
                     <ArrowRight
-                      size={16}
+                      size={18}
                       className="group-hover:translate-x-1 transition-transform"
                     />
                   </span>
                 </button>
               </Magnetic>
 
-              <button className="w-full sm:w-auto px-8 py-4 border border-white/20 backdrop-blur-sm text-white text-xs sm:text-sm font-black uppercase tracking-widest hover:bg-white/10 transition-colors flex items-center justify-center gap-2">
-                <Terminal size={14} /> Documentation
+              <button
+                aria-label="Contact Me"
+                className={`px-10 py-5 border backdrop-blur-md text-sm font-black uppercase tracking-widest rounded-2xl transition-all flex items-center justify-center gap-3 ${isDark ? 'border-white/10 text-white hover:bg-white/5' : 'border-slate-200 text-slate-900 hover:bg-slate-50'}`}
+              >
+                <Terminal size={18} /> Get In Touch
               </button>
             </div>
-          </div>
+          </motion.div>
 
-          {/* --- RIGHT COLUMN: GLASS CARDS (Hidden on Mobile/Small Tablet, Visible on Large Screens) --- */}
+          {/* --- RIGHT CONTENT: INTERACTIVE DASHBOARD --- */}
           <motion.div
             variants={containerVariants}
             initial="hidden"
             animate="show"
-            className="hidden lg:flex relative h-[600px] w-full items-center justify-center perspective-1000"
+            className="hidden lg:flex relative h-[700px] w-full items-center justify-center"
           >
-            {/* Main Glass Panel */}
+            {/* Glass UI Card */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.9, rotateY: 10 }}
-              animate={{ opacity: 1, scale: 1, rotateY: 0 }}
-              transition={{ duration: 0.8, ease: 'easeOut' }}
-              className="relative z-10 w-full max-w-[400px] h-[520px] rounded-2xl border border-white/10 bg-black/40 backdrop-blur-xl shadow-2xl overflow-hidden"
+              variants={widgetVariants}
+              className={`relative z-10 w-full max-w-[440px] rounded-[3rem] border backdrop-blur-3xl shadow-2xl overflow-hidden p-1 ${styles.border} ${styles.cardBg}`}
             >
-              {/* Header of the card */}
-              <div className="h-10 border-b border-white/10 flex items-center px-4 justify-between bg-white/5">
-                <div className="flex gap-2">
-                  <div className="w-3 h-3 rounded-full bg-red-500/50" />
-                  <div className="w-3 h-3 rounded-full bg-yellow-500/50" />
-                  <div className="w-3 h-3 rounded-full bg-green-500/50" />
+              <div
+                className={`rounded-[2.8rem] overflow-hidden border ${isDark ? 'bg-[#0c0c0c] border-white/5' : 'bg-white border-slate-100'}`}
+              >
+                {/* Header bar */}
+                <div
+                  className={`h-14 border-b flex items-center px-8 justify-between ${isDark ? 'border-white/5 bg-white/5' : 'border-slate-100 bg-slate-50'}`}
+                >
+                  <div className="flex gap-2.5">
+                    <div className="w-3 h-3 rounded-full bg-[#53a7f5]/40" />
+                    <div className="w-3 h-3 rounded-full bg-[#53a7f5]/20" />
+                    <div className="w-3 h-3 rounded-full bg-[#53a7f5]/10" />
+                  </div>
+                  <div className="text-[9px] font-black text-slate-500 tracking-[0.3em] uppercase">
+                    System.Status_v4.2
+                  </div>
                 </div>
-                <span className="text-[10px] font-mono text-white/30">
-                  DASHBOARD.EXE
-                </span>
-              </div>
 
-              {/* Body of the card - Abstract Data Visualization */}
-              <div className="p-6 relative h-full flex flex-col">
-                <div className="flex justify-between items-end mb-8">
-                  <div>
-                    <div className="text-[10px] text-[#d9ff00] font-mono mb-1">
-                      CURRENT_LOAD
+                <div className="p-10">
+                  <div className="flex justify-between items-center mb-12">
+                    <div>
+                      <p className="text-[10px] text-[#53a7f5] font-black uppercase tracking-widest mb-2">
+                        Build_Stability
+                      </p>
+                      <h3
+                        className={`text-6xl font-black tracking-tighter ${styles.text}`}
+                      >
+                        99%
+                      </h3>
                     </div>
-                    <div className="text-4xl font-bold text-white">
-                      84<span className="text-lg text-white/50">%</span>
+                    <div
+                      className={`w-16 h-16 rounded-3xl flex items-center justify-center border ${isDark ? 'bg-[#53a7f5]/10 border-[#53a7f5]/20' : 'bg-blue-50 border-blue-100'}`}
+                    >
+                      <Activity
+                        className="text-[#53a7f5] animate-pulse"
+                        size={32}
+                      />
                     </div>
                   </div>
-                  <Activity className="text-[#d9ff00] animate-pulse" />
-                </div>
 
-                {/* Fake Code Lines */}
-                <div className="space-y-3 opacity-60 mb-auto">
-                  <div className="h-2 w-3/4 bg-white/20 rounded-full" />
-                  <div className="h-2 w-1/2 bg-white/20 rounded-full" />
-                  <div className="h-2 w-5/6 bg-white/20 rounded-full" />
-                  <div className="h-2 w-2/3 bg-white/20 rounded-full" />
-                </div>
-
-                {/* Inner Image Area */}
-                <div className="mt-8 rounded-lg overflow-hidden border border-white/10 h-40 relative group">
-                  <img
-                    src="https://i.ibb.co.com/PscWzg4f/Gemini-Generated-Image-y5en9my5en9my5en.png"
-                    className="w-full h-full object-cover opacity-50 grayscale group-hover:scale-110 transition-transform duration-700"
-                    alt="Code"
-                  />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-12 h-12 rounded-full bg-[#d9ff00]/20 flex items-center justify-center backdrop-blur-sm border border-[#d9ff00]">
-                      <Zap size={20} className="text-[#d9ff00]" />
+                  {/* Tech Showcase */}
+                  <div className="grid grid-cols-2 gap-5">
+                    <div
+                      className={`p-6 rounded-[2rem] border transition-colors group ${isDark ? 'bg-white/5 border-white/5 hover:border-[#53a7f5]/30' : 'bg-slate-50 border-slate-100 hover:border-[#53a7f5]/30'}`}
+                    >
+                      <Database className="text-[#53a7f5] mb-3" size={20} />
+                      <p className={`text-lg font-bold ${styles.text}`}>
+                        Supabase
+                      </p>
+                      <p className="text-[9px] text-slate-500 uppercase font-black">
+                        Backend
+                      </p>
+                    </div>
+                    <div
+                      className={`p-6 rounded-[2rem] border transition-colors group ${isDark ? 'bg-white/5 border-white/5 hover:border-[#53a7f5]/30' : 'bg-slate-50 border-slate-100 hover:border-[#53a7f5]/30'}`}
+                    >
+                      <Layers className="text-[#53a7f5] mb-3" size={20} />
+                      <p className={`text-lg font-bold ${styles.text}`}>
+                        React.js
+                      </p>
+                      <p className="text-[9px] text-slate-500 uppercase font-black">
+                        Frontend
+                      </p>
                     </div>
                   </div>
                 </div>
               </div>
             </motion.div>
 
-            {/* Floating Widget 1: Database */}
+            {/* Floating Lighthouse Badge */}
             <motion.div
-              variants={cardVariants}
-              className="absolute top-20 -right-4 xl:right-0 bg-black/80 border border-white/10 p-5 rounded-xl shadow-2xl backdrop-blur-md w-48 z-20"
+              variants={widgetVariants}
+              className={`absolute top-20 -right-4 border p-6 rounded-[2rem] shadow-2xl backdrop-blur-2xl w-48 z-20 ${isDark ? 'bg-[#0a0a0a]/90 border-[#53a7f5]/30' : 'bg-white border-blue-100'}`}
             >
-              <div className="flex items-start justify-between mb-2">
-                <Database className="text-[#d9ff00]" size={20} />
-                <span className="text-[10px] text-green-400 font-mono flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />{' '}
-                  LIVE
+              <div className="flex items-center gap-3 mb-2">
+                <Zap size={18} className="text-[#53a7f5]" fill="currentColor" />
+                <span className="text-[10px] font-black text-[#53a7f5] uppercase tracking-widest">
+                  Performance
                 </span>
               </div>
-              <div className="text-2xl font-bold text-white mb-1">24ms</div>
-              <div className="text-xs text-white/40 uppercase tracking-wider">
-                Latency
-              </div>
+              <p className={`text-2xl font-black ${styles.text}`}>100/100</p>
             </motion.div>
 
-            {/* Floating Widget 2: CPU */}
+            {/* Floating Deployment Badge */}
             <motion.div
-              variants={cardVariants}
-              className="absolute bottom-32 -left-4 xl:-left-10 bg-black/80 border border-white/10 p-5 rounded-xl shadow-2xl backdrop-blur-md w-44 z-20"
+              variants={widgetVariants}
+              className={`absolute bottom-28 -left-12 border p-6 rounded-[2rem] shadow-2xl backdrop-blur-2xl w-52 z-20 ${isDark ? 'bg-white/5 border-white/10' : 'bg-white border-slate-200'}`}
             >
-              <div className="flex items-start justify-between mb-2">
-                <Cpu className="text-[#d9ff00]" size={20} />
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+                <span className="text-[9px] font-black text-slate-500 uppercase">
+                  Live Edge
+                </span>
               </div>
-              <div className="text-2xl font-bold text-white mb-1">Neural</div>
-              <div className="text-xs text-white/40 uppercase tracking-wider">
-                Engine v9
-              </div>
+              <p className={`text-xl font-bold tracking-tight ${styles.text}`}>
+                Optimized SEO
+              </p>
             </motion.div>
           </motion.div>
-
-          {/* --- MOBILE VISUAL (Alternative to glass cards for small screens) --- */}
-          <div className="lg:hidden w-full h-64 sm:h-80 relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl mt-8">
-            <div className="absolute inset-0 bg-gradient-to-br from-[#d9ff00]/10 to-black z-10" />
-            <img
-              src="https://i.ibb.co.com/PscWzg4f/Gemini-Generated-Image-y5en9my5en9my5en.png"
-              className="w-full h-full object-cover opacity-60 grayscale"
-              alt="Mobile Visual"
-            />
-            <div className="absolute bottom-4 left-4 z-20">
-              <div className="flex items-center gap-2 text-[#d9ff00]">
-                <Activity size={20} />
-                <span className="font-mono text-sm font-bold">
-                  SYSTEM_READY
-                </span>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
 
-      {/* Decorative Gradient Line at bottom */}
-      <div className="absolute bottom-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#d9ff00]/50 to-transparent" />
+      {/* Decorative Brand Line */}
+      <div
+        className={`absolute bottom-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#53a7f5]/40 to-transparent`}
+      />
     </section>
   );
 };

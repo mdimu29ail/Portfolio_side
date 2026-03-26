@@ -1,73 +1,125 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 
-const TECH = ['MongoDB', 'Express', 'React', 'Node.js', 'Next.js', 'Typescript', 'Framer Motion', 'PostgreSQL', 'Tailwind', 'Docker', 'AWS', 'Redis'];
+const TECH_STACK = [
+  'React.js',
+  'Node.js',
+  'MongoDB',
+  'Express',
+  'Next.js',
+  'TypeScript',
+  'Tailwind',
+  'Firebase',
+  'Framer Motion',
+  'PostgreSQL',
+  'Supabase',
+];
 
-export const TechMarquee: React.FC<{ theme: 'dark' | 'light' }> = ({ theme }) => {
+const SPECIALTIES = [
+  'Full-Stack',
+  'UI/UX Design',
+  'API Architecture',
+  'Scalable Apps',
+  'Performance Opt',
+  'Clean Code',
+  'MERN Stack',
+  'Backend Systems',
+];
+
+interface MarqueeRowProps {
+  items: string[];
+  direction: 'left' | 'right';
+  speed: number;
+  isDark: boolean;
+}
+
+const MarqueeRow: React.FC<MarqueeRowProps> = ({
+  items,
+  direction,
+  speed,
+  isDark,
+}) => {
+  const scrollTransition = {
+    ease: 'linear',
+    duration: speed,
+    repeat: Infinity,
+  };
+
+  return (
+    <div className="flex overflow-hidden whitespace-nowrap py-2 sm:py-4">
+      <motion.div
+        initial={{ x: direction === 'left' ? 0 : '-50%' }}
+        animate={{ x: direction === 'left' ? '-50%' : 0 }}
+        transition={scrollTransition}
+        className="flex gap-8 md:gap-16 items-center px-4"
+      >
+        {/* Render items twice for a perfect loop */}
+        {[...items, ...items].map((item, index) => (
+          <div key={index} className="flex items-center gap-8 md:gap-16 group">
+            <span
+              aria-hidden={index >= items.length}
+              className={`text-[8vw] md:text-[5vw] font-black uppercase tracking-tighter transition-all duration-500
+                ${
+                  index % 2 === 0
+                    ? isDark
+                      ? 'text-white/10 hover:text-[#53a7f5]'
+                      : 'text-black/5 hover:text-[#53a7f5]'
+                    : 'text-transparent border-text'
+                }
+              `}
+              style={{
+                WebkitTextStroke: `1px ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
+              }}
+            >
+              {item}
+            </span>
+            <div
+              className={`w-2 h-2 rounded-full ${isDark ? 'bg-[#53a7f5]/20' : 'bg-black/5'}`}
+            />
+          </div>
+        ))}
+      </motion.div>
+    </div>
+  );
+};
+
+export const TechMarquee: React.FC<{ theme: 'dark' | 'light' }> = ({
+  theme,
+}) => {
   const isDark = theme === 'dark';
 
   return (
-    <section className={`py-12 sm:py-16 md:py-24 border-y relative overflow-hidden w-full transition-colors duration-500 ${isDark ? 'bg-[#050505] border-white/5' : 'bg-[#f0f0f0] border-black/5'}`}>
-      
-      {/* --- BACKGROUND --- */}
-      <div 
-        className="absolute inset-0 opacity-20 pointer-events-none transition-opacity duration-500"
-        style={{
-            backgroundImage: `linear-gradient(to right, ${isDark ? '#202020' : '#d4d4d4'} 1px, transparent 1px), linear-gradient(to bottom, ${isDark ? '#202020' : '#d4d4d4'} 1px, transparent 1px)`,
-            backgroundSize: '40px 40px'
-        }}
+    <section
+      className={`relative py-10 md:py-20 overflow-hidden border-y transition-colors duration-700
+        ${isDark ? 'bg-[#050505] border-white/5' : 'bg-white border-slate-100'}
+      `}
+    >
+      {/* Subtle Background Glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60%] h-[60%] bg-[#53a7f5]/5 blur-[120px] rounded-full pointer-events-none" />
+
+      {/* Row 1: Left Movement */}
+      <MarqueeRow
+        items={TECH_STACK}
+        direction="left"
+        speed={30}
+        isDark={isDark}
       />
 
-      {/* --- MARQUEE CONTENT --- */}
-      <div className="relative z-10 flex whitespace-nowrap overflow-hidden select-none">
-        <div className="flex animate-marquee items-center min-w-full">
-          
-          {/* List rendered 3 times for seamless looping */}
-          {[...TECH, ...TECH, ...TECH].map((item, j) => (
-            <div key={j} className="flex items-center gap-6 sm:gap-8 md:gap-16 lg:gap-20 mx-2 sm:mx-4 md:mx-10 group">
-              
-              {/* Text Item - Responsive Text Sizes */}
-              <span 
-                className={`text-[14vw] sm:text-[12vw] md:text-[8vw] xl:text-[6vw] font-black uppercase italic tracking-tighter transition-all duration-300 cursor-default
-                ${isDark 
-                  ? 'text-white/5 hover:text-[#d9ff00] hover:shadow-[0_0_40px_rgba(217,255,0,0.3)]' 
-                  : 'text-black/5 hover:text-black hover:scale-105'
-                }`}
-                style={{ WebkitTextStroke: isDark ? '0px' : '0px' }}
-              >
-                {item}
-              </span>
-              
-              {/* Separator - Responsive Sizes */}
-              <div 
-                className={`w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 rotate-45 border transition-colors duration-300
-                ${isDark ? 'border-[#d9ff00]/20 group-hover:bg-[#d9ff00]' : 'border-black/10 group-hover:bg-black'}`} 
-              />
-            </div>
-          ))}
+      {/* Row 2: Right Movement */}
+      <MarqueeRow
+        items={SPECIALTIES}
+        direction="right"
+        speed={25}
+        isDark={isDark}
+      />
 
-        </div>
-      </div>
-      
-      {/* --- CSS ANIMATION --- */}
-      <style dangerouslySetInnerHTML={{ __html: `
-        @keyframes marquee {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-33.33%); }
+      <style jsx global>{`
+        .border-text:hover {
+          -webkit-text-stroke: 1px #53a7f5 !important;
+          color: #53a7f5 !important;
+          opacity: 1 !important;
         }
-        .animate-marquee {
-          display: flex;
-          width: fit-content;
-          animation: marquee 30s linear infinite;
-        }
-        @media (max-width: 768px) {
-          .animate-marquee {
-            animation-duration: 20s; /* Faster on mobile */
-          }
-        }
-        .animate-marquee:hover {
-          animation-play-state: paused;
-        }
-      `}} />
+      `}</style>
     </section>
   );
 };
