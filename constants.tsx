@@ -17,13 +17,13 @@ export const PROJECTS: Project[] = [
     subtitle: 'Pet Adoption & Rescue Ecosystem',
     description:
       'A sophisticated MERN-based bridge connecting rescue animals with forever homes. Engineered with real-time adoption status tracking, secure multi-role access control, and a fluid interface for seamless user interactions.',
-    image:
-      'https://i.ibb.co.com/PscWzg4f/Gemini-Generated-Image-y5en9my5en9my5en.png',
+    image: 'https://i.ibb.co.com/bMGT9QtZ/Pet-adoption.jpg',
     tech: [
       'React',
       'Node.js',
       'Express.js',
       'Supabase',
+      'Stripe',
       'Tailwind',
       'JWT',
       'Framer Motion',
@@ -32,46 +32,66 @@ export const PROJECTS: Project[] = [
     github: 'https://github.com/mdimu29ail/adopt_pet_client',
     githubServer: 'https://github.com/mdimu29ail/adopt_pet_server',
   },
+
   {
     id: '02',
+    title: 'The Spice Slice',
+    subtitle: 'Modern Restaurant & Food Ordering Platform',
+    description:
+      'A dynamic full-stack restaurant platform enabling users to explore menus, place orders, and track deliveries in real time. Built with secure authentication, role-based admin control, and a responsive UI for smooth customer experience.',
+    image: 'https://i.ibb.co.com/Y45JytQh/Restaurean.jpg',
+    tech: [
+      'React',
+      'Node.js',
+      'Express.js',
+      'Supabase',
+      'Tailwind',
+      'JWT',
+      'Stripe',
+    ],
+    link: 'https://the-spice-slice-clicent.vercel.app',
+    github: 'https://github.com/mdimu29ail/The-Spice-Slice-clicent',
+    githubServer: 'https://github.com/mdimu29ail/The-Spice-Slice-server',
+  },
+  {
+    id: '03',
     title: 'MVP Learning',
     subtitle: 'Enterprise Learning Infrastructure',
     description:
       'Developed a high-performance educational platform designed to streamline knowledge transfer. Features include personalized progress dashboards, interactive modules, and a scalable backend optimized for rapid content delivery.',
-    image:
-      'https://i.ibb.co.com/PscWzg4f/Gemini-Generated-Image-y5en9my5en9my5en.png',
+    image: 'https://i.ibb.co.com/PvWcSh9T/Learning.jpg',
     tech: [
       'Next.js',
       'Node.js',
       'Express.js',
       'Supabase',
       'Tailwind',
-      'Redux',
+      'JWT',
       'Framer Motion',
     ],
     link: 'https://learning-marktplace.vercel.app',
     github: 'https://github.com/mdimu29ail/learning_marktplace',
   },
-  {
-    id: '03',
-    title: 'SwiftShip',
-    subtitle: 'Real-time Logistics Engine',
-    description:
-      'An end-to-end logistics solution focused on sub-second data synchronization. Implemented real-time package monitoring, optimized route management, and an enterprise-grade control panel for operational efficiency.',
-    image:
-      'https://i.ibb.co.com/PscWzg4f/Gemini-Generated-Image-y5en9my5en9my5en.png',
-    tech: [
-      'React',
-      'Node.js',
-      'MongoDB',
-      'Socket.io',
-      'Tailwind',
-      'JWT',
-      'Framer Motion',
-    ],
-    link: 'https://your-parcel-link.com',
-    github: 'https://github.com/your-parcel-repo',
-  },
+  // {
+  //   id: '04',
+  //   title: 'SwiftShip',
+  //   subtitle: 'Real-time Logistics Engine',
+  //   description:
+  //     'An end-to-end logistics solution focused on sub-second data synchronization. Implemented real-time package monitoring, optimized route management, and an enterprise-grade control panel for operational efficiency.',
+  //   image:
+  //     'https://i.ibb.co.com/PscWzg4f/Gemini-Generated-Image-y5en9my5en9my5en.png',
+  //   tech: [
+  //     'React',
+  //     'Node.js',
+  //     'MongoDB',
+  //     'Socket.io',
+  //     'Tailwind',
+  //     'JWT',
+  //     'Framer Motion',
+  //   ],
+  //   link: 'https://your-parcel-link.com',
+  //   github: 'https://github.com/your-parcel-repo',
+  // },
 ];
 
 export const EXPERIENCE: Experience[] = [
